@@ -36,8 +36,7 @@ resource "aws_route_table" "my_app_route_table" {
   }
 }
 #AWS Security Group
-resource "aws_security_group" "sg" {
-  name   = "${var.env_prefix}-sg"
+resource "aws_default_security_group" "default_sg" {
   vpc_id = aws_vpc.my_app.id
   ingress {
     from_port   = 22
@@ -59,6 +58,6 @@ resource "aws_security_group" "sg" {
     # prefix_list_ids = [] fpr vpc enpoints
   }
   tags = {
-    Name = "${var.env_prefix}-sg"
+    Name = "${var.env_prefix}-default_sg"
   }
 }
