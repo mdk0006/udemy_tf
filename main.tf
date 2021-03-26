@@ -13,6 +13,7 @@ resource "aws_vpc" "my_app" {
 resource "aws_subnet" "subnet-1" {
   vpc_id     = aws_vpc.my_app.id
   cidr_block = var.subnet_cidr_block
+  availability_zone = var.avail_zone
   tags = {
     Name = "${var.env_prefix}-subnet"
   }
@@ -63,19 +64,22 @@ resource "aws_security_group" "sg" {
   }
 }
 data "aws_ami" "latest_amazon_linux_ami" {
-    most_recent = true 
-    owners = ["amazon"]
-    filter  {
-      name = "name"
-      values = ["amzn2-ami-hvm-*-x86_64-gp2"]
-    }
-    filter {
-      name = "virtualization-type"
-      values = ["hvm"]
-    }
+  most_recent = true
+  owners      = ["amazon"]
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
+  }
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
 }
-/*
 resource "aws_instance" "ec2" {
-
+  ami                         = data.aws_ami.latest_amazon_linux_ami.id
+  instance_type               = var.instance_type
+  subnet_id                   = aws_subnet.subnet-1.id
+  vpc_security_group_ids      = [aws_security_group.sg.id]
+  availability_zone           = var.avail_zone
+  associate_public_ip_address = true
 }
-*/
