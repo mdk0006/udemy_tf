@@ -13,3 +13,6 @@ output "igw-name" {
 output "sg-name" {
   value = aws_security_group.sg.name
 }
+output "aws_ami_id" {
+    value =  data.aws_ami.latest_amazon_linux_ami.id
+}
