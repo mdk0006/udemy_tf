@@ -85,6 +85,7 @@ resource "aws_key_pair" "my-key" {
 }
 #AWS Instance
 resource "aws_instance" "ec2" {
+  count                       = 3
   ami                         = data.aws_ami.latest_amazon_linux_ami.id
   instance_type               = var.instance_type
   subnet_id                   = aws_subnet.subnet-1.id
