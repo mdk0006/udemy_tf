@@ -11,8 +11,8 @@ resource "aws_vpc" "my_app" {
 }
 # AWS Subnet
 resource "aws_subnet" "subnet-1" {
-  vpc_id     = aws_vpc.my_app.id
-  cidr_block = var.subnet_cidr_block
+  vpc_id            = aws_vpc.my_app.id
+  cidr_block        = var.subnet_cidr_block
   availability_zone = var.avail_zone
   tags = {
     Name = "${var.env_prefix}-subnet"
@@ -38,13 +38,13 @@ resource "aws_route_table" "my_app_route_table" {
 }
 #AWS Security Group
 resource "aws_security_group" "sg" {
-  name   = "${var.env_prefix}-sg"
+  name   = "my_sg"
   vpc_id = aws_vpc.my_app.id
   ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = [var.my_ip]
+    cidr_blocks = ["0.0.0.0/0"]
   }
   ingress {
     from_port   = 8080
@@ -75,6 +75,12 @@ data "aws_ami" "latest_amazon_linux_ami" {
     values = ["hvm"]
   }
 }
+resource "aws_key_pair" "my-key" {
+  key_name = "my-key"
+  ##  ssh-keygen -f tf_ec2_key
+  public_key = file("tf_ec2.pub")
+
+}
 resource "aws_instance" "ec2" {
   ami                         = data.aws_ami.latest_amazon_linux_ami.id
   instance_type               = var.instance_type
@@ -82,4 +88,14 @@ resource "aws_instance" "ec2" {
   vpc_security_group_ids      = [aws_security_group.sg.id]
   availability_zone           = var.avail_zone
   associate_public_ip_address = true
+  key_name                    = aws_key_pair.my-key.key_name
+  user_data = file("script.sh")
+  tags = {
+    Name = "${var.env_prefix}-ec2"
+  }
+  
+}
+resource "aws_route_table_association" "rta" {
+  subnet_id      = aws_subnet.subnet-1.id
+  route_table_id = aws_route_table.my_app_route_table.id
 }
