@@ -63,6 +63,7 @@ resource "aws_security_group" "sg" {
     Name = "${var.env_prefix}-sg"
   }
 }
+#AWS Data For AMI's
 data "aws_ami" "latest_amazon_linux_ami" {
   most_recent = true
   owners      = ["amazon"]
@@ -75,12 +76,14 @@ data "aws_ami" "latest_amazon_linux_ami" {
     values = ["hvm"]
   }
 }
+# AWS Keypair
 resource "aws_key_pair" "my-key" {
   key_name = "my-key"
   ##  ssh-keygen -f tf_ec2_key
   public_key = file("tf_ec2.pub")
 
 }
+#AWS Instance
 resource "aws_instance" "ec2" {
   ami                         = data.aws_ami.latest_amazon_linux_ami.id
   instance_type               = var.instance_type
@@ -95,6 +98,7 @@ resource "aws_instance" "ec2" {
   }
 
 }
+#AWS Route Table Association
 resource "aws_route_table_association" "rta" {
   subnet_id      = aws_subnet.subnet-1.id
   route_table_id = aws_route_table.my_app_route_table.id
