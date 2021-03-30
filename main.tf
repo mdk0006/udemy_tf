@@ -89,11 +89,11 @@ resource "aws_instance" "ec2" {
   availability_zone           = var.avail_zone
   associate_public_ip_address = true
   key_name                    = aws_key_pair.my-key.key_name
-  user_data = file("script.sh")
+  user_data                   = file("script.sh")
   tags = {
     Name = "${var.env_prefix}-ec2"
   }
-  
+
 }
 resource "aws_route_table_association" "rta" {
   subnet_id      = aws_subnet.subnet-1.id
