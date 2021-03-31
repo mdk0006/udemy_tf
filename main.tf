@@ -79,7 +79,6 @@ resource "aws_key_pair" "my-key" {
   key_name = "my-key"
   ##  ssh-keygen -f tf_ec2_key
   public_key = file("tf_ec2.pub")
-
 }
 resource "aws_instance" "ec2" {
   ami                         = data.aws_ami.latest_amazon_linux_ami.id
@@ -93,6 +92,7 @@ resource "aws_instance" "ec2" {
   tags = {
     Name = "${var.env_prefix}-ec2"
   }
+
 
 }
 resource "aws_route_table_association" "rta" {
