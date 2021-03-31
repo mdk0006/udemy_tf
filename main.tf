@@ -88,7 +88,19 @@ resource "aws_instance" "ec2" {
   availability_zone           = var.avail_zone
   associate_public_ip_address = true
   key_name                    = aws_key_pair.my-key.key_name
-  user_data                   = file("script.sh")
+  # user_data                   = file("script.sh")
+  connection {
+    type        = "ssh"
+    host        = self.public_ip
+    user        = "ec2-user"
+    private_key = file("tf_ec2")
+  }
+  provisioner "remote-exec" {
+    inline = [
+      "export ENV=dev",
+      "mkdir newdir"
+    ]
+  }
   tags = {
     Name = "${var.env_prefix}-ec2"
   }
