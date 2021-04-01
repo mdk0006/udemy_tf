@@ -1,7 +1,7 @@
 output "vpc_name" {
   value = aws_vpc.my_app.tags.Name
 }
-output "subnet_name" {
+/*output "subnet_name" {
   value = aws_subnet.subnet-1.tags.Name
 }
 output "rt-name" {
@@ -9,7 +9,7 @@ output "rt-name" {
 }
 output "igw-name" {
   value = aws_internet_gateway.igw.tags.Name
-}
+}*/
 output "sg-name" {
   value = aws_security_group.sg.name
 }

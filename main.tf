@@ -10,11 +10,11 @@ resource "aws_vpc" "my_app" {
   }
 }
 module "my_app_subnet" {
-  source = "C:\Users\Danish\Desktop\Terraform Udemy Course\Lab 2\modules\subnets"
+  source            = "./modules/subnets"
   subnet_cidr_block = var.subnet_cidr_block
-  avail_zone = var.avail_zone
-  env_prefix = var.env_prefix
-  vpc_id = aws_vpc.my_app.id
+  avail_zone        = var.avail_zone
+  env_prefix        = var.env_prefix
+  vpc_id            = aws_vpc.my_app.id
 }
 #AWS Security Group
 resource "aws_security_group" "sg" {
@@ -63,7 +63,7 @@ resource "aws_key_pair" "my-key" {
 resource "aws_instance" "ec2" {
   ami                         = data.aws_ami.latest_amazon_linux_ami.id
   instance_type               = var.instance_type
-  subnet_id                   = aws_subnet.subnet-1.id
+  subnet_id                   = module.my_app_subnet.subnet.id
   vpc_security_group_ids      = [aws_security_group.sg.id]
   availability_zone           = var.avail_zone
   associate_public_ip_address = true
